@@ -25,7 +25,7 @@ module.exports = {
 
     createProduct: async (req, res) => {
         try {
-            const {name, power, price, year} = req.body;
+              const {name, power, price, year} = req.body;
 
             const createdProduct = await productService.createProduct(name, power, price, year);
 

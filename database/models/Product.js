@@ -22,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false
         }
     }, {
-        tableName: 'cars',
+        tableName: 'products',
         timestamps: false
     });
 };

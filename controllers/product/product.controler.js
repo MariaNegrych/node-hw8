@@ -4,9 +4,9 @@ module.exports = {
 
     getAllProducts: async (req, res) => {
         try {
-            const cars = await productService.getAllProducts();
+            const products = await productService.getAllProducts();
 
-            res.json(cars);
+            res.json(products);
         } catch (e) {
             res.json(e)
         }
@@ -15,9 +15,9 @@ module.exports = {
     getProduct: async (req, res) => {
         try {
             const {idOfProduct} = req.params;
-            const car = await productService.getProduct(+idOfProduct);
+            const product = await productService.getProduct(+idOfProduct);
 
-            res.json(car);
+            res.json(product);
         } catch (e) {
             res.json(e)
         }
@@ -27,9 +27,9 @@ module.exports = {
         try {
             const {name, power, price, year} = req.body;
 
-            const createdCar = await productService.createProduct(name, power, price, year);
+            const createdProduct = await productService.createProduct(name, power, price, year);
 
-            res.json(createdCar);
+            res.json(createdProduct);
         } catch (e) {
             res.json(e)
         }
@@ -40,9 +40,9 @@ module.exports = {
             const {idOfProduct} = req.params;
             const {name, power, price, year} = req.body;
 
-            const updatedCar = await productService.updateProduct(+idOfProduct, name, power, price, year);
+            const updatedProduct = await productService.updateProduct(+idOfProduct, name, power, price, year);
 
-            res.json(updatedCar);
+            res.json(updatedProduct);
         } catch (e) {
             res.json(e)
         }
@@ -52,9 +52,9 @@ module.exports = {
         try {
             const {idOfProduct} = req.params;
 
-           const deletedCar = await productService.deleteProduct(+idOfProduct);
+           const deletedProduct = await productService.deleteProduct(+idOfProduct);
 
-            res.json(deletedCar);
+            res.json(deletedProduct);
         } catch (e) {
             res.json(e)
         }

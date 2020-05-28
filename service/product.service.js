@@ -30,23 +30,19 @@ module.exports = {
     // }
 
     getAllProducts() {
-        const ProductModel = db.getModel('Car');
+        const ProductModel = db.getModel('Product');
 
         return ProductModel.findAll({});
     },
 
     getProduct(id) {
-        const ProductModel = db.getModel('Car');
+        const ProductModel = db.getModel('Product');
 
-        return ProductModel.findAll({
-            where: {
-                id
-            }
-        });
+        return ProductModel.findByPk(id);
     },
 
     createProduct(name, power, price, year) {
-        const ProductModel = db.getModel('Car');
+        const ProductModel = db.getModel('Product');
 
         return ProductModel.create({
             name, power, price, year
@@ -54,7 +50,7 @@ module.exports = {
     },
 
     updateProduct(id, name, power, price, year) {
-        const ProductModel = db.getModel('Car');
+        const ProductModel = db.getModel('Product');
 
         return ProductModel.update({
             name, power, price, year
@@ -66,7 +62,7 @@ module.exports = {
     },
 
     deleteProduct(id) {
-        const ProductModel = db.getModel('Car');
+        const ProductModel = db.getModel('Product');
 
         return ProductModel.destroy({
             where: {

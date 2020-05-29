@@ -41,34 +41,22 @@ module.exports = {
         return ProductModel.findByPk(id);
     },
 
-    createProduct(name, power, price, year) {
+    createProduct(product) {
         const ProductModel = db.getModel('Product');
 
-        return ProductModel.create({
-            name, power, price, year
-        });
+        return ProductModel.create(product);
     },
 
-    updateProduct(id, name, power, price, year) {
+    updateProduct(id, product) {
         const ProductModel = db.getModel('Product');
 
-        return ProductModel.update({
-            name, power, price, year
-        }, {
-            where: {
-                id
-            }
-        });
+        return ProductModel.update(product, {where: {id}});
     },
 
     deleteProduct(id) {
         const ProductModel = db.getModel('Product');
 
-        return ProductModel.destroy({
-            where: {
-                id
-            }
-        });
+        return ProductModel.destroy({where: {id}});
     }
 
 }

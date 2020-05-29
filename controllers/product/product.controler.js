@@ -25,9 +25,10 @@ module.exports = {
 
     createProduct: async (req, res) => {
         try {
-              const {name, power, price, year} = req.body;
+              // const {name, power, price, year} = req.body;
+            const product = req.body;
 
-            const createdProduct = await productService.createProduct(name, power, price, year);
+            const createdProduct = await productService.createProduct(product);
 
             res.json(createdProduct);
         } catch (e) {
@@ -38,9 +39,10 @@ module.exports = {
     updateProduct: async (req, res) => {
         try {
             const {idOfProduct} = req.params;
-            const {name, power, price, year} = req.body;
+            // const {name, power, price, year} = req.body;
+            const product = req.body
 
-            const updatedProduct = await productService.updateProduct(+idOfProduct, name, power, price, year);
+            const updatedProduct = await productService.updateProduct(+idOfProduct, product);
 
             res.json(updatedProduct);
         } catch (e) {

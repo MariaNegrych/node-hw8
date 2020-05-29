@@ -14,10 +14,10 @@ module.exports = {
 
     getProduct: async (req, res) => {
         try {
-            const {idOfProduct} = req.params;
-            const product = await productService.getProduct(+idOfProduct);
+            // const {idOfProduct} = req.params;
+            // const product = await productService.getProduct(+idOfProduct);
 
-            res.json(product);
+            res.json(req.product);
         } catch (e) {
             res.json(e)
         }
@@ -42,9 +42,9 @@ module.exports = {
             // const {name, power, price, year} = req.body;
             const product = req.body
 
-            const updatedProduct = await productService.updateProduct(+idOfProduct, product);
+             await productService.updateProduct(+idOfProduct, product);
 
-            res.json(updatedProduct);
+            res.sendStatus(204);
         } catch (e) {
             res.json(e)
         }
@@ -54,9 +54,9 @@ module.exports = {
         try {
             const {idOfProduct} = req.params;
 
-           const deletedProduct = await productService.deleteProduct(+idOfProduct);
+            await productService.deleteProduct(+idOfProduct);
 
-            res.json(deletedProduct);
+            res.sendStatus(204);
         } catch (e) {
             res.json(e)
         }

@@ -1,5 +1,7 @@
+const {modelNamesEnum: {PRODUCT, products}} = require('../../constants')
+
 module.exports = (sequelize, DataTypes) => {
-    return sequelize.define('Product', {
+    return sequelize.define(PRODUCT, {
         id: {
             type: DataTypes.INTEGER,
             primaryKey: true,
@@ -22,7 +24,7 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false
         }
     }, {
-        tableName: 'products',
+        tableName: products,
         timestamps: false
     });
 };

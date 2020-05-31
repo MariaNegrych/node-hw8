@@ -14,9 +14,6 @@ module.exports = {
 
     getProduct: async (req, res) => {
         try {
-            // const {idOfProduct} = req.params;
-            // const product = await productService.getProduct(+idOfProduct);
-
             res.json(req.product);
         } catch (e) {
             res.json(e)
@@ -25,7 +22,6 @@ module.exports = {
 
     createProduct: async (req, res) => {
         try {
-              // const {name, power, price, year} = req.body;
             const product = req.body;
 
             const createdProduct = await productService.createProduct(product);
@@ -39,7 +35,6 @@ module.exports = {
     updateProduct: async (req, res) => {
         try {
             const {idOfProduct} = req.params;
-            // const {name, power, price, year} = req.body;
             const product = req.body
 
              await productService.updateProduct(+idOfProduct, product);

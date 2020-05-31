@@ -37,7 +37,7 @@ module.exports = {
             const {idOfProduct} = req.params;
             const product = req.body
 
-             await productService.updateProduct(+idOfProduct, product);
+            await productService.updateProduct(+idOfProduct, product);
 
             res.sendStatus(204);
         } catch (e) {

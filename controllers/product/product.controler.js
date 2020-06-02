@@ -1,5 +1,6 @@
 const {productService} = require('../../service');
-const {productHelper: {hashPromo}} = require('../../helpers')
+const {productHelper: {hashPromo, checkHashPromo}} = require('../../helpers');
+const {ErrorHandler} = require('../../error')
 
 module.exports = {
 
@@ -64,6 +65,26 @@ module.exports = {
         } catch (e) {
             res.json(e)
         }
-    }
+    },
+
+    getDiscountByPromoCode: async (req, res, next) => {
+
+        const {id, promo} = req.body;
+
+        const product = await productService.getProductByParams({id});
+
+
+        if (!product){
+            return next(new ErrorHandler('Product not exist', 404, 4041))
+        }
+
+        const checkCode = await checkHashPromo(product.promo, promo);
+
+        if (!checkCode){
+            return next(new ErrorHandler('Promo code is not valid', 404, 4041))
+        }
+
+        res.json(product);
+    },
 
 };

@@ -7,6 +7,7 @@ const {productMiddleware: {productIsExsists, productIdValidation}} = require('..
 
 productRouter.get('/', productController.getAllProducts);
 productRouter.post('/', productIdValidation, productController.createProduct);
+productRouter.post('/sale', productController.getDiscountByPromoCode);
 
 productRouter.use('/:idOfProduct', productIsExsists);
 productRouter.get('/:idOfProduct', productController.getProduct);

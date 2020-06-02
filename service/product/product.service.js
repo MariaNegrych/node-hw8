@@ -15,6 +15,14 @@ module.exports = {
         return ProductModel.findByPk(id);
     },
 
+    getProductByParams: (params) => {
+        const ProductModel = db.getModel(PRODUCT);
+
+        return ProductModel.findOne({
+            where: params
+        })
+    },
+
     createProduct(product) {
         const ProductModel = db.getModel(PRODUCT);
 

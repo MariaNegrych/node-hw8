@@ -42,6 +42,6 @@ module.exports = (req, res, next) => {
         next();
 
     } catch (e) {
-        res.end(e.message)
+        res.render('error', {message: e.message})
     }
 }

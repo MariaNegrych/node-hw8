@@ -22,6 +22,7 @@ db.setModels();
 const { productRouter, userRouter } = require('./routes');
 
 app.use('/products', productRouter);
+app.use('/users', userRouter)
 
 app.listen(5555, (err) => {
     if (err) {

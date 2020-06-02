@@ -1,4 +1,5 @@
 const {productService} = require('../../service');
+const {productHelper: {hashPromo}} = require('../../helpers')
 
 module.exports = {
 
@@ -24,6 +25,10 @@ module.exports = {
         try {
             const product = req.body;
 
+            const hashedPromo = await hashPromo(product.promo)
+
+            product.promo = hashedPromo;
+
             const createdProduct = await productService.createProduct(product);
 
             res.json(createdProduct);
@@ -35,7 +40,11 @@ module.exports = {
     updateProduct: async (req, res) => {
         try {
             const {idOfProduct} = req.params;
-            const product = req.body
+            const product = req.body;
+
+            const hashedPromo = await hashPromo(product.promo)
+
+            product.promo = hashedPromo;
 
             await productService.updateProduct(+idOfProduct, product);
 

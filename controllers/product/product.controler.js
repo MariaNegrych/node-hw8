@@ -35,7 +35,6 @@ module.exports = {
         } catch (e) {
             res.json(e)
         }
-        res.end()
     },
 
     updateProduct: async (req, res) => {

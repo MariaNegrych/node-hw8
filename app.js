@@ -22,7 +22,16 @@ db.setModels();
 const { productRouter, userRouter } = require('./routes');
 
 app.use('/products', productRouter);
-app.use('/users', userRouter)
+app.use('/users', userRouter);
+
+app.use('*', (err, req, res, next) => {
+    res
+        .status(err.status || 400)
+        .json({
+            message: err.message,
+            code: err.customCode
+        })
+});
 
 app.listen(5555, (err) => {
     if (err) {
@@ -30,4 +39,10 @@ app.listen(5555, (err) => {
     } else {
         console.log('Hello from 5555...');
     }
-})
+});
+
+process.on('unhandledRejection', reason => {
+    console.log(reason);
+
+    process.exit(0);
+});

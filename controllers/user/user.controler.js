@@ -42,7 +42,6 @@ module.exports = {
         } catch (e) {
             res.json(e)
         }
-        res.end()
     },
 
     updateUser: async (req, res) => {

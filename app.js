@@ -19,8 +19,9 @@ db.setModels();
 // app.set('view engine', '.hbs');
 // app.set('views', path.join(__dirname, 'views'));
 
-const { productRouter, userRouter } = require('./routes');
+const {authRouter, productRouter, userRouter} = require('./routes');
 
+app.use('/auth', authRouter);
 app.use('/products', productRouter);
 app.use('/users', userRouter);
 

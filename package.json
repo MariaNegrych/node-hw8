@@ -1,17 +1,19 @@
 {
-  "name": "node-hw5",
+  "name": "node-hw6",
   "version": "1.0.0",
   "dependencies": {
-    "express": "^4.17.1",
-    "mysql2": "^2.1.0",
-    "sequelize": "^5.21.11",
     "bcrypt": "^4.0.1",
-    "joi": "^14.3.1"
+    "express": "^4.17.1",
+    "joi": "^14.3.1",
+    "jsonwebtoken": "^8.5.1",
+    "mysql2": "^2.1.0",
+    "sequelize": "^5.21.11"
   },
   "devDependencies": {
     "@types/express": "^4.17.1",
+    "@types/joi": "^14.3.4",
+    "@types/jsonwebtoken": "^8.5.0",
     "@types/sequelize": "^4.28.9",
-    "express-handlebars": "^4.0.4",
-    "@types/joi": "^14.3.4"
+    "express-handlebars": "^4.0.4"
   }
 }

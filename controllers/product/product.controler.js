@@ -1,6 +1,7 @@
 const {productService} = require('../../service');
 const {productHelper: {hashPromo, checkHashPromo}} = require('../../helpers');
-const {ErrorHandler} = require('../../error')
+const {ErrorHandler} = require('../../error');
+const {errorsEnum: {NOT_FOUND}, responseEnum} = require('../../constants')
 
 module.exports = {
 
@@ -75,13 +76,13 @@ module.exports = {
 
 
         if (!product){
-            return next(new ErrorHandler('Product not exist', 404, 4041))
+            return next(new ErrorHandler(NOT_FOUND.message, responseEnum.NOT_FOUND))
         }
 
         const checkCode = await checkHashPromo(product.promo, promo);
 
         if (!checkCode){
-            return next(new ErrorHandler('Promo code is not valid', 404, 4041))
+            return next(new ErrorHandler(NOT_FOUND.message, responseEnum.NOT_FOUND))
         }
 
         res.json(product);

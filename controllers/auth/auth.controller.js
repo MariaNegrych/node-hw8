@@ -1,7 +1,14 @@
 const {authService, userService} = require('../../service');
-const {tokinizer, userHelper: {checkHashPassword}} = require('../../helpers');
-const ErrorHandler = require('../../error/ErrorHandler');
-const {Authorization} = require('../../constants/words.enum')
+const {
+    tokinizer,
+    userHelper: {checkHashPassword}
+} = require('../../helpers');
+const {ErrorHandler} = require('../../error');
+const {
+    requestEnum: {Authorization},
+    errorsEnum: {NOT_FOUND},
+    responseEnum
+} = require('../../constants');
 
 module.exports = {
     loginUser: async (req, res, next) => {
@@ -10,7 +17,7 @@ module.exports = {
             const user = await userService.getUserByParams({email});
 
             if (!user) {
-                return next(new ErrorHandler('NO USER', 404, 4041));
+                return next(new ErrorHandler(NOT_FOUND.message, responseEnum.NOT_FOUND));
             }
 
             await checkHashPassword(user.password, password);
@@ -30,7 +37,7 @@ module.exports = {
 
         await authService.deleteByParams({access_token});
 
-        res.sendStatus(200);
+        res.sendStatus(responseEnum.CREATED);
     },
 
     refreshToken: async (req, res, next) => {
@@ -40,7 +47,7 @@ module.exports = {
             const {userId} = await authService.getTokensByParams({refresh_token});
 
             if (!userId) {
-                return next(new ErrorHandler('NO USER', 404, 4041));
+                return next(new ErrorHandler(NOT_FOUND.message, responseEnum.NOT_FOUND));
             }
             await authService.deleteByParams({refresh_token});
 

@@ -1,11 +1,11 @@
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcrypt');
+
+const {ErrorHandler} = require('../../error');
+const {errorsEnum: {NOT_FOUND}, responseEnum} = require('../../constants')
 
 module.exports = async (hashedPassword, password) => {
     const isPasswordsEquals = await bcrypt.compare(password, hashedPassword);
-    console.log('*************************************');
-    console.log(isPasswordsEquals);
-    console.log('*************************************');
     if (!isPasswordsEquals) {
-        throw new Error('User is not exist');
+        throw new ErrorHandler(NOT_FOUND.message, responseEnum.UNAUTHORIZED);
     }
 }

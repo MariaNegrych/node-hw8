@@ -30,7 +30,8 @@
 const Joi = require('joi');
 
 const ProductValidationSchema = require('../../validators/product/new-product.validator');
-const {ErrorHandler} = require('../../error')
+const {ErrorHandler} = require('../../error');
+const {responseEnum} = require('../../constants')
 
 module.exports = (req, res, next) => {
     try {
@@ -38,7 +39,7 @@ module.exports = (req, res, next) => {
         const {error} = Joi.validate(product, ProductValidationSchema );
 
         if(error){
-            return next(new ErrorHandler(error.details[0].message, 400));
+            return next(new ErrorHandler(error.details[0].message, responseEnum.BAD_REQUEST));
         }
 
         next();

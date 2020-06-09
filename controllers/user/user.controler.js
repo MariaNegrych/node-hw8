@@ -1,7 +1,11 @@
-const {userService} = require('../../service');
+const {emailService, userService} = require('../../service');
 const {userHelper: {checkHashPassword, hashPassword}} = require('../../helpers');
 const {ErrorHandler} = require('../../error');
-const {errorsEnum:{NOT_FOUND}, responseEnum} = require('../../constants')
+const {
+    errorsEnum: {NOT_FOUND},
+    responseEnum,
+    emailActionEnum
+} = require('../../constants')
 
 module.exports = {
 
@@ -37,9 +41,14 @@ module.exports = {
 
             user.password = hashedPassword;
 
-            const createdUser = await userService.createUser(user);
+            await userService.createUser(user);
 
-            res.json(createdUser)
+            await emailService.sendMail(
+                user.email,
+                emailActionEnum.USER_REGISTER,
+                {userName: user.name}
+            )
+            res.sendStatus(204)
         } catch (e) {
             res.json(e)
         }
@@ -48,9 +57,19 @@ module.exports = {
     updateUser: async (req, res) => {
         try {
             const {idOfUser} = req.params;
-            const user = req.body;
+            const newUser = req.body;
 
-            await userService.updateUser(+idOfUser, user);
+            const user = await userService.getUser(+idOfUser);
+            await userService.updateUser(+idOfUser, newUser);
+
+            await emailService.sendMail(
+                user.email,
+                emailActionEnum.USER_UPDATED,
+                {
+                    Name: newUser.name,
+                    Age: newUser.age
+                }
+            )
 
             res.sendStatus(204);
         } catch (e) {
@@ -61,8 +80,21 @@ module.exports = {
     deleteUser: async (req, res) => {
         try {
             const {idOfUser} = req.params;
+            // const user = req.body;
 
+            const user = await userService.getUser(+idOfUser);
             await userService.deleteUser(+idOfUser);
+
+            await emailService.sendMail(
+                user.email,
+                emailActionEnum.USER_DELETED,
+                {
+                    Name: user.name,
+                    Age: user.age,
+                    Email: user.email,
+                    Password: user.password
+                }
+            )
 
             res.sendStatus(204);
         } catch (e) {

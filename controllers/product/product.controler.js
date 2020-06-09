@@ -1,7 +1,7 @@
-const {productService} = require('../../service');
+const {productService, userService, emailService} = require('../../service');
 const {productHelper: {hashPromo, checkHashPromo}} = require('../../helpers');
 const {ErrorHandler} = require('../../error');
-const {errorsEnum: {NOT_FOUND}, responseEnum} = require('../../constants')
+const {errorsEnum: {NOT_FOUND},  responseEnum: {CREATED}, emailActionEnum} = require('../../constants')
 
 module.exports = {
 
@@ -23,15 +23,31 @@ module.exports = {
         }
     },
 
+
     createProduct: async (req, res) => {
         try {
             const product = req.body;
+            const idOfUser = req.userId;
+            const user = await userService.getUser(idOfUser);
 
             const hashedPromo = await hashPromo(product.promo)
 
             product.promo = hashedPromo;
 
             const createdProduct = await productService.createProduct(product);
+
+            await emailService.sendMail(
+                user.email,
+                emailActionEnum.PRODUCT_CREATED,
+                {
+                    userName: user.name,
+                    userEmail: user.email,
+                    Name: product.name,
+                    Power: product.power,
+                    Price: product.price,
+                    Year: product.year
+                }
+            )
 
             res.json(createdProduct);
         } catch (e) {
@@ -43,6 +59,8 @@ module.exports = {
         try {
             const {idOfProduct} = req.params;
             const product = req.body;
+            const userId = req.userId;
+            const user = await userService.getUser(userId);
 
             const hashedPromo = await hashPromo(product.promo)
 
@@ -50,7 +68,21 @@ module.exports = {
 
             await productService.updateProduct(+idOfProduct, product);
 
-            res.sendStatus(204);
+
+            await emailService.sendMail(
+                user.email,
+                emailActionEnum.PRODUCT_UPDATED,
+                {
+                    userName: user.name,
+                    userEmail: user.email,
+                    Name: product.name,
+                    Power: product.power,
+                    Price: product.price,
+                    Year: product.year
+                }
+            )
+
+            res.sendStatus(CREATED);
         } catch (e) {
             res.json(e)
         }
@@ -59,10 +91,26 @@ module.exports = {
     deleteProduct: async (req, res) => {
         try {
             const {idOfProduct} = req.params;
+            const idOfUser = req.userId;
+            const user = await userService.getUser(idOfUser);
 
+            const product = await productService.getProduct(idOfProduct);
             await productService.deleteProduct(+idOfProduct);
 
-            res.sendStatus(204);
+            await emailService.sendMail(
+                user.email,
+                emailActionEnum.PRODUCT_DELETED,
+                {
+                    userName: user.name,
+                    userEmail: user.email,
+                    Name: product.name,
+                    Power: product.power,
+                    Price: product.price,
+                    Year: product.year
+                }
+            )
+
+            res.sendStatus(CREATED);
         } catch (e) {
             res.json(e)
         }

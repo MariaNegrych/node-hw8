@@ -1,7 +1,6 @@
 require('dotenv').config();
 
 const express = require('express');
-// const expressBars = require('express-handlebars');
 const path = require('path');
 const morgan = require('morgan');
 const {PORT} = require("./config");
@@ -13,16 +12,6 @@ app.use(morgan('dev'))
 app.use(express.json());
 app.use(express.urlencoded());
 db.setModels();
-
-// app.use(express.static(path.join(__dirname, 'views')));
-//
-// app.engine('.hbs', expressBars({
-//     defaultLayout: false,
-//     extname: '.hbs'
-// }))
-//
-// app.set('view engine', '.hbs');
-// app.set('views', path.join(__dirname, 'views'));
 
 const {authRouter, productRouter, userRouter} = require('./routes');
 

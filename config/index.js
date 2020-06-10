@@ -5,5 +5,9 @@ module.exports = {
     ROOT_EMAIL_PASSWORD: process.env.ROOT_EMAIL_PASSWORD || 'pass',
     ROOT_EMAIL_SERVICE: process.env.ROOT_EMAIL_SERVICE || 'yahoo',
 
-    FRONTEND_URL: process.env.FRONTEND_URL || 'http://localhost:4200'
+    FRONTEND_URL: process.env.FRONTEND_URL || 'http://localhost:4200',
+
+    DB_login: process.env.DB_login,
+    DB_pass: process.env.DB_pass,
+    DB_name: process.env.DB_name
 }

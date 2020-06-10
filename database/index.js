@@ -2,12 +2,13 @@
 const Sequelize = require('sequelize');
 const fs = require('fs');
 const path = require('path');
+const {DB_name, DB_login, DB_pass} = require("../config");
 
 module.exports = (() => {
     let instance;
 
     function newConnection() {
-        const sequelize = new Sequelize('shop', 'root', 'Mn23081995', {
+        const sequelize = new Sequelize(DB_name, DB_login, DB_pass, {
             host: 'localhost',
             dialect: 'mysql'
         });

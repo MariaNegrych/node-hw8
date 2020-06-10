@@ -4,6 +4,7 @@ const express = require('express');
 // const expressBars = require('express-handlebars');
 const path = require('path');
 const morgan = require('morgan');
+const {PORT} = require("./config");
 
 const app = express();
 const db = require('./database').getInstance();
@@ -38,11 +39,11 @@ app.use('*', (err, req, res, next) => {
         })
 });
 
-app.listen(5555, (err) => {
+app.listen(PORT, (err) => {
     if (err) {
         console.log(err);
     } else {
-        console.log('Hello from 5555...');
+        console.log(`Hello from ${PORT}...`);
     }
 });
 

@@ -1,3 +1,7 @@
+const fs = require('fs-extra').promises;
+const path = require('path');
+const uuid = require('uuid').v1();
+
 const {emailService, userService} = require('../../service');
 const {userHelper: {checkHashPassword, hashPassword}} = require('../../helpers');
 const {ErrorHandler} = require('../../error');
@@ -5,7 +9,7 @@ const {
     errorsEnum: {NOT_FOUND},
     responseEnum,
     emailActionEnum
-} = require('../../constants')
+} = require('../../constants');
 
 module.exports = {
 
@@ -36,19 +40,31 @@ module.exports = {
     createUser: async (req, res) => {
         try {
             const user = req.body;
+            const [avatar] = req.photos;
 
             const hashedPassword = await hashPassword(user.password)
 
             user.password = hashedPassword;
 
-            await userService.createUser(user);
+             const {id} = await userService.createUser(user);
+            console.log(id);
+
+            if (avatar) {
+                const photoDir = `users/${id}/photos`;
+                const fileExtension = avatar.name.split('.').pop();
+                const photoName = `${uuid}.${fileExtension}`;
+
+                await fs.mkdir(path.resolve(process.cwd(), 'public', photoDir), {recursive: true});
+                await avatar.mv(path.resolve(process.cwd(), 'public', photoDir, photoName));
+                await userService.updateUser(id, {photo: `/${photoDir}/${photoName}`});
+            }
 
             await emailService.sendMail(
                 user.email,
                 emailActionEnum.USER_REGISTER,
                 {userName: user.name}
             )
-            res.sendStatus(204)
+            res.sendStatus(204);
         } catch (e) {
             res.json(e)
         }
@@ -57,17 +73,29 @@ module.exports = {
     updateUser: async (req, res) => {
         try {
             const {idOfUser} = req.params;
+            const [avatar] = req.photos;
             const newUser = req.body;
 
             const user = await userService.getUser(+idOfUser);
             await userService.updateUser(+idOfUser, newUser);
+
+            if (avatar) {
+                const photoDir = `users/${idOfUser}/photos`;
+                const fileExtension = avatar.name.split('.').pop();
+                const photoName = `${uuid}.${fileExtension}`;
+
+                await fs.mkdir(path.resolve(process.cwd(), 'public', photoDir), {recursive: true});
+                await avatar.mv(path.resolve(process.cwd(), 'public', photoDir, photoName));
+                await userService.updateUser(idOfUser, {photo: `/${photoDir}/${photoName}`}, newUser);
+            }
 
             await emailService.sendMail(
                 user.email,
                 emailActionEnum.USER_UPDATED,
                 {
                     Name: newUser.name,
-                    Age: newUser.age
+                    Age: newUser.age,
+                    Photo: newUser.photo
                 }
             )
 
@@ -92,7 +120,8 @@ module.exports = {
                     Name: user.name,
                     Age: user.age,
                     Email: user.email,
-                    Password: user.password
+                    Password: user.password,
+                    Photo: user.photo
                 }
             )
 

@@ -1,7 +1,6 @@
 const Joi = require('joi')
 
 module.exports = Joi.object().keys({
-    id: Joi.number().integer().min(1).required(),
     name: Joi.string().trim().alphanum().min(3).max(50).required(),
     power: Joi.number().integer().required(),
     price: Joi.number().integer().required(),

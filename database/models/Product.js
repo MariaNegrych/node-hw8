@@ -26,6 +26,12 @@ module.exports = (sequelize, DataTypes) => {
         promo: {
             type: DataTypes.STRING,
             allowNull: true
+        },
+        photo: {
+            type: DataTypes.STRING
+        },
+        file: {
+            type: DataTypes.STRING
         }
     }, {
         tableName: products,

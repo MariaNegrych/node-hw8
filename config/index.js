@@ -9,5 +9,7 @@ module.exports = {
 
     DB_login: process.env.DB_login,
     DB_pass: process.env.DB_pass,
-    DB_name: process.env.DB_name
+    DB_name: process.env.DB_name,
+
+    CRON_JOB_PERIOD: process.env.CRON_JOB_PERIOD || '0 0 * * *',
 }

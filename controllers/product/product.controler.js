@@ -1,7 +1,11 @@
+const fs = require('fs-extra').promises;
+const path = require('path');
+const uuid = require('uuid').v1();
+
 const {productService, userService, emailService} = require('../../service');
 const {productHelper: {hashPromo, checkHashPromo}} = require('../../helpers');
 const {ErrorHandler} = require('../../error');
-const {errorsEnum: {NOT_FOUND},  responseEnum: {CREATED}, emailActionEnum} = require('../../constants')
+const {errorsEnum: {NOT_FOUND},  responseEnum, emailActionEnum} = require('../../constants')
 
 module.exports = {
 
@@ -27,6 +31,8 @@ module.exports = {
     createProduct: async (req, res) => {
         try {
             const product = req.body;
+            const [avatar] = req.photos;
+            const [file] = req.docs;
             const idOfUser = req.userId;
             const user = await userService.getUser(idOfUser);
 
@@ -34,7 +40,27 @@ module.exports = {
 
             product.promo = hashedPromo;
 
-            const createdProduct = await productService.createProduct(product);
+            const {id} = await productService.createProduct(product);
+
+            if (avatar) {
+                const photoDir = `products/${id}/photos`;
+                const fileExt = avatar.name.split('.').pop();
+                const photoName = `${uuid}.${fileExt}`;
+
+                await fs.mkdir(path.resolve(process.cwd(), 'public', photoDir), {recursive: true});
+                await avatar.mv(path.resolve(process.cwd(), 'public', photoDir, photoName));
+                await productService.updateProduct(id, {photo: `/${photoDir}/${photoName}`})
+            }
+
+            if (file) {
+                const fileDir = `products/${id}/files`;
+                const fileExt = file.name.split('.').pop();
+                const fileName = `${uuid}.${fileExt}`;
+
+                await fs.mkdir(path.resolve(process.cwd(), 'public', fileDir), {recursive: true});
+                await file.mv(path.resolve(process.cwd(), 'public', fileDir, fileName));
+                await productService.updateProduct(id, {file: `/${fileDir}/${fileName}`})
+            }
 
             await emailService.sendMail(
                 user.email,
@@ -45,11 +71,13 @@ module.exports = {
                     Name: product.name,
                     Power: product.power,
                     Price: product.price,
-                    Year: product.year
+                    Year: product.year,
+                    Photo: product.photo,
+                    File: product.files
                 }
             )
 
-            res.json(createdProduct);
+            res.sendStatus(204);
         } catch (e) {
             res.json(e)
         }
@@ -59,6 +87,8 @@ module.exports = {
         try {
             const {idOfProduct} = req.params;
             const product = req.body;
+            const [avatar] = req.photos;
+            const [file] = req.docs;
             const userId = req.userId;
             const user = await userService.getUser(userId);
 
@@ -68,6 +98,26 @@ module.exports = {
 
             await productService.updateProduct(+idOfProduct, product);
 
+             // await productService.getProduct(idOfProduct);
+
+            if (avatar) {
+                const photoDir = `products/${idOfProduct}/photos`;
+                const fileExt = avatar.name.split('.').pop();
+                const photoName = `${uuid}.${fileExt}`;
+
+                await fs.mkdir(path.resolve(process.cwd(), 'public', photoDir), {recursive: true});
+                await avatar.mv(path.resolve(process.cwd(), 'public', photoDir, photoName));
+                await productService.updateProduct(idOfProduct, {photo: `/${photoDir}/${photoName}`}, product)
+            }
+            if (file) {
+                const fileDir = `products/${idOfProduct}/files`;
+                const fileExt = file.name.split('.').pop();
+                const fileName = `${uuid}.${fileExt}`;
+
+                await fs.mkdir(path.resolve(process.cwd(), 'public', fileDir), {recursive: true});
+                await file.mv(path.resolve(process.cwd(), 'public', fileDir, fileName));
+                await productService.updateProduct(idOfProduct, {file: `/${fileDir}/${fileName}`})
+            }
 
             await emailService.sendMail(
                 user.email,
@@ -78,11 +128,13 @@ module.exports = {
                     Name: product.name,
                     Power: product.power,
                     Price: product.price,
-                    Year: product.year
+                    Year: product.year,
+                    Photo: product.photo,
+                    File: product.files
                 }
             )
 
-            res.sendStatus(CREATED);
+            res.sendStatus(responseEnum.CREATED);
         } catch (e) {
             res.json(e)
         }
@@ -106,7 +158,8 @@ module.exports = {
                     Name: product.name,
                     Power: product.power,
                     Price: product.price,
-                    Year: product.year
+                    Year: product.year,
+                    Photo: product.photo
                 }
             )
 
